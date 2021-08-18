@@ -14,6 +14,7 @@ export class CovidDataComponent implements OnInit {
   @Output('statusSlectedChange') statusSelectedChange: EventEmitter<any> = new EventEmitter(); 
   details!: RegionDetailDTO[];
   detailsByProvince!: RegionDetailDTO[];
+  allValue!:RegionDetailDTO;
   displayedColumns: string[] = ['name','confirmed', 'deaths'];
   fileName:string = 'TOP 10 COVID-19 CASES'
   selectedValue:RegionDetailDTO = new RegionDetailDTO();
@@ -23,8 +24,17 @@ export class CovidDataComponent implements OnInit {
   ngOnInit() {
     this.regionService.getData().subscribe((res: any[])=>{
       this.details= res;
-      console.log(this.details)  
-    })  
+      console.log(this.details)
+      this.allValue = new RegionDetailDTO();
+      this.allValue.iso="ALL";
+      this.allValue.name="ALL"
+      this.allValue.confirmed=-1; 
+      
+ 
+    
+      console.log(this.allValue);    
+    })
+  
   }
 
   exportToExcel(table: any[])
@@ -39,7 +49,21 @@ export class CovidDataComponent implements OnInit {
 
   getByProvince(region: RegionDetailDTO)
   {
-    this.validTable=false
+    if(region.name==="ALL")
+    {
+      this.validTable=true;
+      this.details.length = this.details.length - 1;
+      return;
+    }
+    this.validTable=false;
+    if(this.details.length<=10)
+    {
+      this.details.push(this.allValue);
+    }
+    this.regionService.getDataByProvince(region).subscribe((res: any[])=>{
+      this.detailsByProvince= res;
+      console.log(this.detailsByProvince)       
+    })
   }
 
   

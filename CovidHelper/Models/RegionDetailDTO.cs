@@ -60,7 +60,7 @@ namespace CovidHelper.Models
 
             foreach (var item in details)
             {
-                detailsData.Add(FromModelToDTOByRegion(item));
+                detailsData.Add(FromModelToDTOByProvince(item));
             }
 
             return detailsData;
