@@ -27,5 +27,12 @@ namespace CovidHelper.Controllers
             var result = await _regionService.GetAll();
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<Region>>> GetAllByProvincee([FromBody]Region region)
+        {
+            var result = await _regionService.GetAllByProvince(region.Name,region.Iso);
+            return Ok(result);
+        }
     }
 }

@@ -35,8 +35,47 @@ namespace CovidHelper.Services
 
         public async Task<RegionDetail> GetAllInformationByRegion(string regionName,string iso)
         {
-            
+            RegionDetailData result = await GetByRegion(regionName, iso);
+            if (result.Data.Any())
+            {
+                var resultByCountry = result.Data.GroupBy(x => x.Region.Name)
+                .Select(region => new RegionDetail
+                {
+                    Deaths = region.Sum(re => re.Deaths),
+                    Confirmed = region.Sum(re => re.Confirmed),
+                    Region = region.First().Region,
+                }).ToList();
+
+                return resultByCountry.FirstOrDefault();
+            }
+            return new RegionDetail();
+
+        }
+
+
+        public async Task<List<RegionDetail>> GetAllInformationByProvince(string regionName, string iso)
+        {
+            RegionDetailData result = await GetByRegion(regionName, iso);
+            if (result.Data.Any())
+            {
+                var resultByProvince = result.Data.GroupBy(x => x.Region.Province)
+                .Select(region => new RegionDetail
+                {
+                    Deaths = region.Sum(re => re.Deaths),
+                    Confirmed = region.Sum(re => re.Confirmed),
+                    Region = region.First().Region,                    
+                }).ToList();
+
+                return resultByProvince;
+            }
+            return new List<RegionDetail>();
+
+        }
+
+        private static async Task<RegionDetailData> GetByRegion(string regionName, string iso)
+        {
             var client = new HttpClient();
+            RegionDetailData result = new RegionDetailData();
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -52,24 +91,11 @@ namespace CovidHelper.Services
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(body);
-                var result = JsonConvert.DeserializeObject<RegionDetailData>(body);
-                if (result.Data.Any()) 
-                {
-                     var resultByCountry = result.Data.GroupBy(x => x.Region.Name)
-                     .Select(region => new RegionDetail
-                     {
-                         Deaths = region.Sum(re => re.Deaths),
-                         Confirmed = region.Sum(re => re.Confirmed),
-                         Region = region.First().Region,
-                     }).ToList();
-                     
-                    return resultByCountry.FirstOrDefault();
-                }
-
-                return new RegionDetail();
-
+                result = JsonConvert.DeserializeObject<RegionDetailData>(body);
 
             }
+
+            return result;
         }
 
         public async Task<List<RegionDetail>> GetAll()
@@ -82,9 +108,18 @@ namespace CovidHelper.Services
                 regionData.Add(regionInformation);
             }
 
-            var china = regionData.FirstOrDefault(x => x.Region.Name == "China");
             regionData = regionData.OrderByDescending(x => x.Confirmed).Take(10).ToList();
            
+            return regionData;
+
+        }
+
+        public async Task<List<RegionDetail>> GetAllByProvince(string name, string iso)
+        {
+            List<RegionDetail> regionData = new List<RegionDetail>();
+            var regionInformation = await GetAllInformationByProvince(name, iso);
+            regionData.AddRange(regionInformation);
+            regionData = regionData.OrderByDescending(x => x.Confirmed).Take(10).ToList();
             return regionData;
 
         }
