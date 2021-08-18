@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RegionDetail } from 'src/app/Models/RegionDetail';
+import { RegionDetailDTO } from 'src/app/Models/RegionDetailDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class RegionService {
     this.url = baseUrl+ 'api/region';
   }
 
-  getData(): Observable<RegionDetail[]> {
-    return this.http.get<RegionDetail[]>(this.url);
+  getData(): Observable<RegionDetailDTO[]> {
+    return this.http.get<RegionDetailDTO[]>(this.url);
   }
 }
 

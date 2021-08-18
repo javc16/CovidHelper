@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { RegionDetail } from 'src/app/Models/RegionDetail';
+import { Router } from '@angular/router';
+import { RegionDetailDTO } from 'src/app/Models/RegionDetailDTO';
 import { ExcelService } from 'src/app/Services/Excel/excel.service';
 import { JsonService } from 'src/app/Services/Json/json.service';
 import { RegionService } from 'src/app/Services/Region/region.service';
@@ -11,11 +12,13 @@ import { RegionService } from 'src/app/Services/Region/region.service';
 })
 export class CovidDataComponent implements OnInit {
   @Output('statusSlectedChange') statusSelectedChange: EventEmitter<any> = new EventEmitter(); 
-  details!: RegionDetail[];
+  details!: RegionDetailDTO[];
+  detailsByProvince!: RegionDetailDTO[];
   displayedColumns: string[] = ['name','confirmed', 'deaths'];
   fileName:string = 'TOP 10 COVID-19 CASES'
-  selectedValue!:string;
-  constructor(private regionService: RegionService, private excelService: ExcelService, private jsonService: JsonService) { }
+  selectedValue:RegionDetailDTO = new RegionDetailDTO();
+  validTable:boolean = true;
+  constructor(private regionService: RegionService, private excelService: ExcelService, private jsonService: JsonService,private router: Router,) { }
 
   ngOnInit() {
     this.regionService.getData().subscribe((res: any[])=>{
@@ -24,14 +27,19 @@ export class CovidDataComponent implements OnInit {
     })  
   }
 
-  exportToExcel()
+  exportToExcel(table: any[])
   {
-    this.excelService.exportJsonAsExcelFile(this.details,this.fileName);
+    this.excelService.exportJsonAsExcelFile(table,this.fileName);
   }
 
-  exportToJson()
+  exportToJson(table: any[])
   {
-    this.jsonService.downloadJson(this.details,this.fileName);
+    this.jsonService.downloadJson(table,this.fileName);
+  }
+
+  getByProvince(region: RegionDetailDTO)
+  {
+    this.validTable=false
   }
 
   

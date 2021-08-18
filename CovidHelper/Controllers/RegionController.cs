@@ -22,14 +22,14 @@ namespace CovidHelper.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Region>>> GetAll()
+        public async Task<ActionResult<IEnumerable<RegionDetailDTO>>> GetAll()
         {
             var result = await _regionService.GetAll();
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Region>>> GetAllByProvincee([FromBody]Region region)
+        public async Task<ActionResult<IEnumerable<RegionDetailDTO>>> GetAllByProvincee([FromBody]Region region)
         {
             var result = await _regionService.GetAllByProvince(region.Name,region.Iso);
             return Ok(result);

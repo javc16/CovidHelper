@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './material-module';
 import { FooterComponent } from './footer/footer.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { CovidDataByProvinceComponent } from './Components/covid-data/covid-data-by-province/covid-data-by-province.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
     CounterComponent,
     FetchDataComponent,
     CovidDataComponent,
-    FooterComponent, 
+    FooterComponent,
+    CovidDataByProvinceComponent, 
     
   ],
   imports: [
@@ -34,6 +36,11 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
       { path: '', component: CovidDataComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'fetch-data', component: FetchDataComponent },
+      {
+        path: 'databyprovince',
+        component: CovidDataByProvinceComponent,
+      }, 
     ]),
     BrowserAnimationsModule,
     AngularMaterialModule,

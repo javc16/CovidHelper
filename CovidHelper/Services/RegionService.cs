@@ -98,7 +98,7 @@ namespace CovidHelper.Services
             return result;
         }
 
-        public async Task<List<RegionDetail>> GetAll()
+        public async Task<List<RegionDetailDTO>> GetAll()
         {
             var regions = await GetAllRegions();
             List<RegionDetail> regionData = new List<RegionDetail>();
@@ -110,17 +110,19 @@ namespace CovidHelper.Services
 
             regionData = regionData.OrderByDescending(x => x.Confirmed).Take(10).ToList();
            
-            return regionData;
+            var detail = RegionDetailDTO.FromModelToDTOByRegion(regionData);
+            return detail.ToList();
 
         }
 
-        public async Task<List<RegionDetail>> GetAllByProvince(string name, string iso)
+        public async Task<List<RegionDetailDTO>> GetAllByProvince(string name, string iso)
         {
             List<RegionDetail> regionData = new List<RegionDetail>();
             var regionInformation = await GetAllInformationByProvince(name, iso);
             regionData.AddRange(regionInformation);
             regionData = regionData.OrderByDescending(x => x.Confirmed).Take(10).ToList();
-            return regionData;
+            var detail = RegionDetailDTO.FromModelToDTOByProvince(regionData);
+            return detail.ToList();
 
         }
     }
