@@ -64,7 +64,7 @@
 </div>
 
 <div *ngIf="!validTable">
-  <p *ngIf="detailsByProvince"><em>Loading...</em></p>
+  <p *ngIf="!detailsByProvince"><em>Loading...</em></p>
   <div style="display: inline-block;width: 100%;" *ngIf="detailsByProvince">
       <mat-form-field appearance="fill" *ngIf="detailsByProvince" >
           <mat-label>Regions</mat-label>
